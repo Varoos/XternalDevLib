@@ -425,7 +425,7 @@ namespace XternalDevLib
             int numLines = message.Split('\n').Length;
             int width = 350;
             int height = 230;
-            if(numLines > 3)
+            if(numLines > 2)
             {
                 height = 230 + ((numLines - 2) * 15);
             }

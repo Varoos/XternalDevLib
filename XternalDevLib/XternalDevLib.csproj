@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>C:\Program Files %28x86%29\Focus\Focus8\XternalDevLib.XML</DocumentationFile>
+    <DocumentationFile>C:\Program Files %28x86%29\Focus Softnet\Focus8\XternalDevLib.XML</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -100,8 +100,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Focus Softnet\Focus8\Focus.TranSettings.DataStructs.dll</HintPath>
     </Reference>
+    <Reference Include="Focus.Web.Mvc.Session">
+      <HintPath>C:\inetpub\wwwroot\Focus.Web.Focus8\bin\Focus.Web.Mvc.Session.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.ReportViewer.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
     <Reference Include="Microsoft.ReportViewer.WinForms, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Focus Softnet\Focus8\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -116,6 +123,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class\DBEntity.cs" />
+    <Compile Include="Class\Focus8API.cs" />
+    <Compile Include="Class\PrePayment.cs" />
     <Compile Include="DBScript.cs" />
     <Compile Include="Demo.cs" />
     <Compile Include="DevLib.cs" />
@@ -233,6 +243,13 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="myDataType.cs" />
+    <Compile Include="Prepayment\frmPrePayment00.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Prepayment\frmPrePayment00.designer.cs">
+      <DependentUpon>frmPrePayment00.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PrintRDLReport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GvRptViewer1_Pg.cs">
       <SubType>Form</SubType>
@@ -329,6 +346,9 @@
     <EmbeddedResource Include="GvRptViewer1_Pg.resx">
       <DependentUpon>GvRptViewer1_Pg.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Prepayment\frmPrePayment00.resx">
+      <DependentUpon>frmPrePayment00.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -350,6 +370,7 @@
     <Content Include="F.ico" />
     <Content Include="I.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

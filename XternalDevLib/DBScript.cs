@@ -9,6 +9,12 @@ using System.Threading.Tasks;
 class DBScript
 {
      DevLib Xlib = new DevLib();
+    /// <summary>
+    /// used for few clients, now this class is used 
+    /// check with DBEntity new class used for auto run sql script
+    /// </summary>
+    /// <returns></returns>
+
     public bool DB_Update()
     {
         bool rtnFlag = false;

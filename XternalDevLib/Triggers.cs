@@ -981,5 +981,23 @@ namespace XternalDevLib
                 Xlib.ErrLog(ex, "Triggers.Beat_Year_Ago_Sales()");
             }
         }
+
+
+        public void ReportBuilder2016()
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string SQL = "Select Top (10) iMasterId, sName, sCode From mCore_Account";
+                dt = Xlib.GetDataTableAPI(SQL);
+
+                Xlib.ReportShow("Test.rdl", new string[] { "DataSet1" }, new DataTable[] { dt }, "Report Title", true);
+            }
+            catch (Exception ex)
+            {
+                Xlib.ErrLog(ex, "2016ReportBuilder");
+            }
+        }
+
     }
 }

@@ -952,6 +952,54 @@ public class DevLib
         return Convert.ToString(result);
     }
 
+    /// <summary>
+    /// Insert  Bulk Data into SQL Table
+    /// </summary>
+    /// <param name="dtColumn"></param>
+    /// <param name="dbColumn"></param>
+    /// <param name="dbTableName"></param>
+    /// <param name="dt"></param>
+    /// <returns></returns>
+    public int BulkInsert(string[] dtColumn, string[] dbColumn, string dbTableName, DataTable dt)
+    {
+        int rtnValue = 0;
+        string connection = GetConnectionString(0, "");  // "Data Source=192.168.1.107;Initial Catalog=Focus8090;User Id =sa; Password =sql@2019";
+        SqlConnection con = new SqlConnection(connection);
+        try
+        {
+            if (dtColumn.Length == dbColumn.Length)
+            {
+                //create object of SqlBulkCopy which help to insert  
+                SqlBulkCopy objbulk = new SqlBulkCopy(con);
+
+                //assign Destination table name  
+                objbulk.DestinationTableName = dbTableName;
+
+                for (int i = 0; i < dtColumn.Length; i++)
+                {
+                    objbulk.ColumnMappings.Add(dtColumn[i], dbColumn[i]);
+                }
+
+                con.Open();
+                //insert bulk Records into DataBase.  
+                objbulk.WriteToServer(dt);
+                con.Close();
+
+                rtnValue = 1;
+            }
+            else
+            {
+                MessageBox.Show("Different Columns");
+            }
+        }
+        catch (Exception ex)
+        {
+            rtnValue = 0;
+            con.Close();
+            ErrLog(ex, "DevLib.BulkInsert()");
+        }
+        return rtnValue;
+    }
 
     #region Use For Connection TimeOut Issue
 
@@ -1780,17 +1828,17 @@ public class DevLib
             string strSQL = "";
             if (MasterTableId != 0)
             {
-                dt_Mst = GetDataTableByQuery("Select md.DisplayName as DisplayCol, m.TableName as TableName  From xt_MasterTable m inner join xt_MasterTable_Display md on m.MasterTableID= md.MasterTableID and m.MasterTableID  = " + Convert.ToString(MasterTableId) + " and md.F2ID = " + Convert.ToString(DisplayColID), "");
+                dt_Mst = GetDataTableAPI("Select md.DisplayName as DisplayCol, m.TableName as TableName  From xt_MasterTable m inner join xt_MasterTable_Display md on m.MasterTableID= md.MasterTableID and m.MasterTableID  = " + Convert.ToString(MasterTableId) + " and md.F2ID = " + Convert.ToString(DisplayColID));
             }
             else
             {
-                dt_Mst = GetDataTableByQuery("Select md.DisplayName as DisplayCol, m.TableName as TableName  From xt_MasterTable m inner join xt_MasterTable_Display md on m.MasterTableID= md.MasterTableID and m.iMasterTypeID= " + Convert.ToString(MasterTypeId) + " and md.F2ID = " + Convert.ToString(DisplayColID), "");
+                dt_Mst = GetDataTableAPI("Select md.DisplayName as DisplayCol, m.TableName as TableName  From xt_MasterTable m inner join xt_MasterTable_Display md on m.MasterTableID= md.MasterTableID and m.iMasterTypeID= " + Convert.ToString(MasterTypeId) + " and md.F2ID = " + Convert.ToString(DisplayColID));
             }
             if (dt_Mst.Rows.Count > 0)
             {
                 strSQL = "Select a.iMasterId as ID, " + Convert.ToString(dt_Mst.Rows[0]["DisplayCol"]) + " as Name From " + Convert.ToString(dt_Mst.Rows[0]["TableName"]);
 
-                dt = GetDataTableByQuery(strSQL, "");
+                dt = GetDataTableAPI(strSQL);
 
                 if (dt.Rows.Count > 0)
                 {
@@ -1820,11 +1868,11 @@ public class DevLib
                 DataTable dt = new DataTable();
                 if (MasterTableId != 0)
                 {
-                    dt = GetDataTableByQuery("Select F2ID From xt_MasterTable m inner join xt_MasterTable_Display md on m.MasterTableID= md.MasterTableID and m.MasterTableID = " + Convert.ToString(MasterTableId) + " and md.F2ID = " + Convert.ToString(DisplayColID + 1), "");
+                    dt = GetDataTableAPI("Select F2ID From xt_MasterTable m inner join xt_MasterTable_Display md on m.MasterTableID= md.MasterTableID and m.MasterTableID = " + Convert.ToString(MasterTableId) + " and md.F2ID = " + Convert.ToString(DisplayColID + 1));
                 }
                 else
                 {
-                    dt = GetDataTableByQuery("Select F2ID From xt_MasterTable m inner join xt_MasterTable_Display md on m.MasterTableID= md.MasterTableID and m.iMasterTypeID = " + Convert.ToString(MasterTypeId) + " and md.F2ID = " + Convert.ToString(DisplayColID + 1), "");
+                    dt = GetDataTableAPI("Select F2ID From xt_MasterTable m inner join xt_MasterTable_Display md on m.MasterTableID= md.MasterTableID and m.iMasterTypeID = " + Convert.ToString(MasterTypeId) + " and md.F2ID = " + Convert.ToString(DisplayColID + 1));
                 }
                 if (dt.Rows.Count > 0)
                 {
@@ -2616,6 +2664,45 @@ public class DevLib
             ErrLog(ex, "DevLib.GetExtraFieldValueHeader()");
         }
         return TagValue;
+    }
+
+
+
+    
+    public int GetExtraFieldPositionFooter(string Name, FooterData[] Footer)
+    {
+        int Position = 0;
+        try
+        {
+            for (int i = 0; i < Footer.Length; i++)
+            {
+                if (Footer[i].FieldName == Name)
+                {
+                    Position = i;
+                    break;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrLog(ex, "DevLib.GetExtraFieldPositionHeader()");
+        }
+        return Position;
+    }
+
+    public object GetExtraFieldValueFooter(string Name, FooterData[] Footer)
+    {
+        object Value = 0;
+        try
+        {
+            int Position = GetExtraFieldPositionFooter(Name, Footer);
+            Value = Footer[Position].Value;
+        }
+        catch (Exception ex)
+        {
+            ErrLog(ex, "DevLib.GetExtraFieldValueHeader()");
+        }
+        return Value;
     }
 
 
@@ -3581,7 +3668,7 @@ public class DevLib
     /// <param name="DSNmae">DataSet Name Array</param>
     /// <param name="DSValue">Result DataTable Array</param>
     /// <param name="Title">From Title</param>
-    public void ReportShow(string ReportName, string[] DSNmae, DataTable[] DSValue, string Title, bool MinimizeOption = false)       //, string[] ParamName, string ParamValue
+    public void ReportShow(string ReportName, string[] DSNmae, DataTable[] DSValue, string Title, bool MinimizeOption = false, bool bPrintDialog = false)       //, string[] ParamName, string ParamValue
     {
         try
         {
@@ -3605,6 +3692,8 @@ public class DevLib
             f.Text = Title;
             f.MinimizeBox = MinimizeOption;
 
+
+
             if (MinimizeOption)
             {
 
@@ -3613,6 +3702,12 @@ public class DevLib
             else
             {
                 f.ShowDialog();
+            }
+
+            if (bPrintDialog)
+            {
+                f.RptViewer.LocalReport.PrintToPrinter();
+                f.lblPrint.Text = "1";
             }
 
 
@@ -4042,10 +4137,14 @@ public class DevLib
 
             for (int i = 0; i < gv.Rows.Count; i++)
             {
-                gv.Rows[i].DefaultCellStyle.BackColor = Color.White;
-                if (e.RowIndex == i)
+                Color color = gv.Rows[i].DefaultCellStyle.BackColor;
+                if (color == Color.Yellow || color == Color.White)
                 {
-                    gv.Rows[i].DefaultCellStyle.BackColor = Color.Yellow;
+                    gv.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                    if (e.RowIndex == i)
+                    {
+                        gv.Rows[i].DefaultCellStyle.BackColor = Color.Yellow;
+                    }
                 }
             }
 

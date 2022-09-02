@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Reporting.WinForms;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -21,6 +22,11 @@ namespace XternalDevLib
         {
 
             this.RptViewer.RefreshReport();
+            if (lblPrint.Text == "1")
+            {
+                
+
+            }
         }
     }
 }

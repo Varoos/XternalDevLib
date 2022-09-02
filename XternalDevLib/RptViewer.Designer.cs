@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmRptViewer));
             this.RptViewer = new Microsoft.Reporting.WinForms.ReportViewer();
+            this.lblPrint = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // RptViewer
@@ -40,11 +41,22 @@
             this.RptViewer.Size = new System.Drawing.Size(1327, 624);
             this.RptViewer.TabIndex = 0;
             // 
+            // lblPrint
+            // 
+            this.lblPrint.AutoSize = true;
+            this.lblPrint.Location = new System.Drawing.Point(1116, 41);
+            this.lblPrint.Name = "lblPrint";
+            this.lblPrint.Size = new System.Drawing.Size(13, 13);
+            this.lblPrint.TabIndex = 1;
+            this.lblPrint.Text = "0";
+            this.lblPrint.Visible = false;
+            // 
             // frmRptViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1327, 624);
+            this.Controls.Add(this.lblPrint);
             this.Controls.Add(this.RptViewer);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -53,11 +65,13 @@
             this.Text = "Report Viewer";
             this.Load += new System.EventHandler(this.frmRptViewer_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         public Microsoft.Reporting.WinForms.ReportViewer RptViewer;
+        public System.Windows.Forms.Label lblPrint;
     }
 }
